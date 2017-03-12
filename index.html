@@ -1,0 +1,41 @@
+<input type="text" id="filename" value="https://youtube.com">
+<input type="text" id="delay" value="1000">
+<div id="submit">Get image</div>
+
+<style>
+    #submit{
+        cursor: pointer;
+        background: grey;
+        width: 75px;
+        height: 25px;
+        text-align: center;
+        line-height: 25px;
+        color: white;
+        margin-top: 10px;
+    }
+</style>
+
+<script>
+    document.querySelector('#submit').addEventListener('click', () => {
+        fetch('http://demtest.ru:4123/getScreenshot', {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url: document.querySelector('#filename').value,
+                delay: document.querySelector('#delay').value
+            })
+        }).then((r) => {
+            r.text().then((text) => {
+                let image = document.createElement('a');
+                image.href = text;
+                image.setAttribute('download', document.querySelector('#filename').value+'.png');
+                document.body.appendChild(image);
+                image.click();
+            });
+        });
+    });
+
+</script>
